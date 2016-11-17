@@ -128,7 +128,7 @@ func ping(pingChan <-chan string, pongChan chan<- Pong) {
 		}
 
 		swVendor, _ := sw.SysVendor(ip, "2yoas696zorx", 1000)
-		isSw = (len(swVendor) > 0)
+		isSw = (len(swVendor) > 0 && swVendor != "Linux")
 		pongChan <- Pong{Ip: ip, Alive: alive, IsSw: isSw}
 	}
 }
