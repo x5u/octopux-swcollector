@@ -86,6 +86,9 @@ func Hosts(ipnet *net.IPNet) ([]string, error) {
 	for ; ipnet.Contains(ip); inc(ip) {
 		ips = append(ips, ip.String())
 	}
+	if len(ips) <= 1 {
+		return nil, fmt.Errorf("the ipnet is empty %v。\n", ipnet)
+	}
 	return ips[1 : len(ips)-1], nil
 }
 
@@ -274,7 +277,11 @@ func InitLanIps() {
 	//lanNetIps = make([]string, 0)
 	IsCollector = false
 	for _, inet := range nets {
-		hostip, _ := Hosts(inet)
+		hostip, err := Hosts(inet)
+		if err != nil {
+			log.Println("Get net ips err:", err.Error())
+			continue
+		}
 		//log.Println("get hostsip ", hostip)
 		for _, h := range hostip {
 			lanNetIps = append(lanNetIps, h)
